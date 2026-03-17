@@ -403,21 +403,14 @@
             z-index: 100;
         }
 
-        .developer-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-            margin: 1rem 0;
-            width: 100%;
-            max-width: 500px;
-        }
+
 
         @media (max-width: 768px) {
             .slide h1 { font-size: 1.8rem; }
             .slide h2 { font-size: 1.4rem; }
             .slide p, .slide li { font-size: 1rem; }
             .stat-grid { grid-template-columns: 1fr; }
-            .developer-stats { grid-template-columns: 1fr; }
+
             .listing-row { flex-direction: column; gap: 0.5rem; }
         }
 
@@ -544,30 +537,7 @@
             <p class="highlight">We provide the leads. You close the deals.</p>
         </div>
 
-        <!-- Slide 6: Developer Intel -->
-        <div class="slide">
-            <h2>Bonus — Developer Intel</h2>
-            <p>It's not just sellers. We track the market for developers too.</p>
-            
-            <div class="developer-stats">
-                <div class="stat-box">
-                    <span class="stat-number">12</span>
-                    <span>New planning applications this month</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-number">3</span>
-                    <span>Gap sites identified</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-number">+15%</span>
-                    <span>Waterside YoY growth</span>
-                </div>
-            </div>
-            
-            <p style="margin-top: 1.5rem;">Connect James Gorman with Derry's biggest builders.</p>
-        </div>
-
-        <!-- Slide 7: Weekly Report Card -->
+        <!-- Slide 6: Weekly Report Card -->
         <div class="slide">
             <h2>Weekly Report Card</h2>
             <div class="report-card">
@@ -588,15 +558,11 @@
                     <span>Back on market</span>
                     <span class="highlight">2</span>
                 </div>
-                <div class="report-item">
-                    <span>New planning applications</span>
-                    <span class="highlight">1</span>
-                </div>
             </div>
             <p class="highlight">Delivered to your inbox every Monday at 8am</p>
         </div>
 
-        <!-- Slide 8: CTA (Softened) -->
+        <!-- Slide 7: CTA (Softened) -->
         <div class="slide">
             <h1>This runs every week. Automatically.</h1>
             <p style="font-size: 1.2rem; margin: 2rem 0; color: rgba(255, 255, 255, 0.9);">Fresh leads delivered to your inbox every Monday morning.</p>
@@ -620,7 +586,6 @@
         <div class="dot" onclick="goToSlide(4)"></div>
         <div class="dot" onclick="goToSlide(5)"></div>
         <div class="dot" onclick="goToSlide(6)"></div>
-        <div class="dot" onclick="goToSlide(7)"></div>
     </div>
 
     <div class="nav-hint">Tap anywhere or swipe to navigate</div>
