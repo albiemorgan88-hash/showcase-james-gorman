@@ -52,13 +52,26 @@
             100% { transform: translateX(-100%); }
         }
 
-        .scan-line {
-            position: absolute;
-            height: 3px;
-            background: #FF4520;
-            box-shadow: 0 0 20px #FF4520;
-            animation: scan 3s infinite ease-in-out;
-            z-index: 10;
+        @keyframes pulseRed {
+            0%, 100% { 
+                color: #dc3545; 
+                text-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+            }
+            50% { 
+                color: #ff1e2d; 
+                text-shadow: 0 0 10px rgba(220, 53, 69, 0.8);
+            }
+        }
+
+        @keyframes slideInCard {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
         }
 
         .slide h1 {
@@ -110,6 +123,124 @@
             display: block;
         }
 
+        /* PropertyPal-style components */
+        .propertypal-header {
+            background: #00A651;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .propertypal-search {
+            background: white;
+            color: #333;
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 1rem;
+        }
+
+        .propertypal-container {
+            background: white;
+            color: #333;
+            border-radius: 12px;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .property-card {
+            background: white;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            animation: slideInCard 0.6s ease-out;
+            position: relative;
+        }
+
+        .property-card.with-delay-1 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: both; }
+        .property-card.with-delay-2 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: both; }
+        .property-card.with-delay-3 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: both; }
+
+        .property-address {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #00A651;
+            margin-bottom: 8px;
+        }
+
+        .property-details {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .property-agent {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .property-days {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .days-stale-90plus {
+            animation: pulseRed 2s infinite;
+        }
+
+        .scanning-counter {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 0 0 12px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Lead scoring badges */
+        .lead-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .lead-badge.hot {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .lead-badge.warm {
+            background: linear-gradient(135deg, #fd7e14, #e55a00);
+        }
+
+        .lead-badge.monitor {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #333;
+        }
+
+        /* Original components for other slides */
         .listing-table {
             background: rgba(255, 255, 255, 0.95);
             color: #333;
@@ -211,16 +342,32 @@
         }
 
         .contact-info {
-            background: rgba(255, 69, 32, 0.1);
-            border: 2px solid #FF4520;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 1.5rem;
             border-radius: 12px;
             margin: 1.5rem 0;
         }
 
         .contact-info h3 {
-            color: #FF4520;
+            color: white;
             margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .blue-canvas-subtle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 1rem;
+        }
+
+        .blue-canvas-subtle a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        .blue-canvas-subtle a:hover {
+            color: white;
         }
 
         .progress-dots {
@@ -308,62 +455,80 @@
             <p class="highlight" style="margin-top: 1.5rem;">What if YOU could reach them first?</p>
         </div>
 
-        <!-- Slide 3: How It Works — The Scan -->
+        <!-- Slide 3: How It Works — The Scan (PropertyPal Style) -->
         <div class="slide">
             <h2>How It Works — The Scan</h2>
-            <div class="scan-line"></div>
-            <p style="margin-bottom: 1.5rem;">Scanning PropertyPal for stale listings...</p>
-            <div class="listing-table">
-                <div class="listing-row listing-header">
-                    <span>Property</span>
-                    <span>Days Listed</span>
-                    <span>Agent</span>
+            <div class="propertypal-container">
+                <div class="propertypal-header">
+                    🏠 PropertyPal - Property Search
                 </div>
-                <div class="listing-row">
-                    <span>4-bed detached, Culmore, £285k</span>
-                    <span class="days-stale days-hot">127 days</span>
-                    <span>Small Agent Ltd</span>
+                <div class="propertypal-search">
+                    🔍 Search: "Derry, BT47, BT48" - For Sale
                 </div>
-                <div class="listing-row">
-                    <span>3-bed semi, Waterside, £175k</span>
-                    <span class="days-stale days-warm">94 days</span>
-                    <span>CityRealty</span>
+                <div style="padding: 15px;">
+                    <div class="property-card">
+                        <div class="property-address">📍 14 Beechwood Park, Waterside</div>
+                        <div class="property-price">£175,000</div>
+                        <div class="property-details">3 bed | Semi-detached</div>
+                        <div class="property-agent">🏢 Listed by: Small Agent Ltd</div>
+                        <div class="property-days days-stale-90plus">⏰ 94 days on market</div>
+                    </div>
+                    <div class="property-card with-delay-1">
+                        <div class="property-address">📍 22 Culmore Heights, Culmore</div>
+                        <div class="property-price">£285,000</div>
+                        <div class="property-details">4 bed | Detached</div>
+                        <div class="property-agent">🏢 Listed by: CityRealty</div>
+                        <div class="property-days days-stale-90plus">⏰ 127 days on market</div>
+                    </div>
+                    <div class="property-card with-delay-2">
+                        <div class="property-address">📍 8 Northland Road, Cityside</div>
+                        <div class="property-price">£125,000</div>
+                        <div class="property-details">2 bed | Terrace</div>
+                        <div class="property-agent">🏢 Listed by: Local Estates</div>
+                        <div class="property-days days-stale-90plus">⏰ 108 days on market</div>
+                    </div>
                 </div>
-                <div class="listing-row">
-                    <span>2-bed terrace, Cityside, £125k</span>
-                    <span class="days-stale days-hot">108 days</span>
-                    <span>Local Estates</span>
-                </div>
-                <div class="listing-row">
-                    <span>3-bed semi, Eglinton, £210k</span>
-                    <span class="days-stale days-hot">156 days</span>
-                    <span>BTWShivers</span>
+                <div class="scanning-counter">
+                    Scanning... 247 properties found
                 </div>
             </div>
-            <p class="highlight">Found 83 stale listings in Derry right now</p>
         </div>
 
-        <!-- Slide 4: The Lead Score -->
+        <!-- Slide 4: The Lead Score (PropertyPal Style with Badges) -->
         <div class="slide">
             <h2>The Lead Score</h2>
-            <p>We score every listing so you focus on the most likely to switch:</p>
-            
-            <div class="lead-score">
-                <span class="fire-emoji">🔥🔥🔥</span>
-                <span><strong>HOT</strong> - 120+ days, small agent, price reduced twice</span>
+            <p style="margin-bottom: 1.5rem;">We score every listing so you focus on the most likely to switch:</p>
+            <div class="propertypal-container">
+                <div class="propertypal-header">
+                    🔥 Hot Leads - Scored Properties
+                </div>
+                <div style="padding: 15px;">
+                    <div class="property-card">
+                        <div class="lead-badge hot">🔥🔥🔥 HOT LEAD</div>
+                        <div class="property-address">📍 22 Culmore Heights, Culmore</div>
+                        <div class="property-price">£285,000</div>
+                        <div class="property-details">4 bed | Detached</div>
+                        <div class="property-agent">🏢 Listed by: CityRealty</div>
+                        <div class="property-days" style="color: #dc3545;">⏰ 127 days — price reduced twice</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="lead-badge warm">🔥🔥 WARM</div>
+                        <div class="property-address">📍 14 Beechwood Park, Waterside</div>
+                        <div class="property-price">£175,000</div>
+                        <div class="property-details">3 bed | Semi-detached</div>
+                        <div class="property-agent">🏢 Listed by: Small Agent Ltd</div>
+                        <div class="property-days" style="color: #fd7e14;">⏰ 94 days — price reduced</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="lead-badge monitor">🔥 MONITOR</div>
+                        <div class="property-address">📍 5 Spencer Road, Eglinton</div>
+                        <div class="property-price">£210,000</div>
+                        <div class="property-details">3 bed | Semi-detached</div>
+                        <div class="property-agent">🏢 Listed by: BTWShivers</div>
+                        <div class="property-days" style="color: #e0a800;">⏰ 67 days — no price change</div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="lead-score">
-                <span class="fire-emoji">🔥🔥</span>
-                <span><strong>WARM</strong> - 90-120 days, price reduced once</span>
-            </div>
-            
-            <div class="lead-score">
-                <span class="fire-emoji">🔥</span>
-                <span><strong>MONITOR</strong> - 60-90 days, no price change yet</span>
-            </div>
-            
-            <p style="margin-top: 2rem;">Focus your time where it counts most.</p>
         </div>
 
         <!-- Slide 5: The Approach -->
@@ -431,15 +596,18 @@
             <p class="highlight">Delivered to your inbox every Monday at 8am</p>
         </div>
 
-        <!-- Slide 8: CTA -->
+        <!-- Slide 8: CTA (Softened) -->
         <div class="slide">
-            <h1>While other agents wait for the phone to ring...</h1>
-            <p class="highlight" style="font-size: 1.4rem; margin: 2rem 0;">You'll be the one making the call.</p>
+            <h1>This runs every week. Automatically.</h1>
+            <p style="font-size: 1.2rem; margin: 2rem 0; color: rgba(255, 255, 255, 0.9);">Fresh leads delivered to your inbox every Monday morning.</p>
             
             <div class="contact-info">
-                <h3>Ready to get started?</h3>
-                <p><strong>Phil Patterson</strong><br>Blue Canvas AI</p>
-                <p>📞 +44 7935 217762<br>✉️ contact@bluecanvas.ai</p>
+                <h3>Interested?</h3>
+                <p>phil@bluecanvas.ai</p>
+            </div>
+            
+            <div class="blue-canvas-subtle">
+                Built by <a href="mailto:phil@bluecanvas.ai">Blue Canvas AI</a>
             </div>
         </div>
     </div>
