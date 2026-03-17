@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PropertyPal Lead Scraper | James Gorman Property</title>
+    <title>James Gorman Property - Stale Listing Lead Generation</title>
     <style>
         * {
             margin: 0;
@@ -11,339 +11,221 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --blue: #2B4DAF;
-            --accent: #FF4520;
-            --white: #FFFFFF;
-            --light-gray: #F5F7FA;
-            --dark-gray: #333;
-            --success: #10B981;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--white);
-            color: var(--dark-gray);
+            background: linear-gradient(135deg, #2B4DAF 0%, #1a3078 100%);
+            color: white;
             overflow: hidden;
+            height: 100vh;
         }
 
-        .showcase {
+        .showcase-container {
             height: 100vh;
-            position: relative;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .slide {
             display: none;
-            flex: 1;
-            padding: 20px;
-            text-align: center;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            padding: 20px;
+            height: 100vh;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .slide.active {
             display: flex;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .scan-line {
+            position: absolute;
+            height: 3px;
+            background: #FF4520;
+            box-shadow: 0 0 20px #FF4520;
+            animation: scan 3s infinite ease-in-out;
+            z-index: 10;
+        }
+
         .slide h1 {
-            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-size: 2.2rem;
             font-weight: 700;
-            color: var(--blue);
             margin-bottom: 1.5rem;
             line-height: 1.2;
         }
 
         .slide h2 {
-            font-size: clamp(1.4rem, 4vw, 2.2rem);
-            font-weight: 600;
-            color: var(--blue);
+            font-size: 1.8rem;
+            color: #FF4520;
             margin-bottom: 1rem;
+            font-weight: 600;
         }
 
-        .slide p {
-            font-size: clamp(1rem, 3vw, 1.3rem);
+        .slide p, .slide li {
+            font-size: 1.1rem;
             line-height: 1.6;
-            color: var(--dark-gray);
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-        }
-
-        .problem-list {
-            text-align: left;
-            margin: 1.5rem 0;
-            max-width: 500px;
-        }
-
-        .problem-list li {
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            margin: 0.8rem 0;
-            color: var(--dark-gray);
-            position: relative;
-            padding-left: 1.5rem;
-        }
-
-        .problem-list li:before {
-            content: "❌";
-            position: absolute;
-            left: 0;
-        }
-
-        .solution-text {
-            background: var(--accent);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            font-size: clamp(1rem, 3vw, 1.2rem);
-        }
-
-        /* Scanning Animation */
-        .scanning-container {
-            background: var(--light-gray);
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 1.5rem 0;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .scanning-text {
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            color: var(--blue);
             margin-bottom: 1rem;
-            animation: pulse 2s infinite;
+            max-width: 600px;
         }
 
-        .progress-bar {
-            background: #e0e7ff;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, var(--blue), var(--accent));
-            height: 100%;
-            width: 0%;
-            animation: fillProgress 4s ease-out;
-        }
-
-        .counter {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        .highlight {
+            color: #FF4520;
             font-weight: 700;
-            color: var(--accent);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 69, 32, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            color: #FF4520;
+            font-weight: 700;
+            display: block;
+        }
+
+        .listing-table {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-radius: 12px;
+            padding: 1rem;
             margin: 1rem 0;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .data-table {
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-top: 1rem;
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        .data-header {
-            background: var(--blue);
-            color: var(--white);
-            padding: 0.8rem;
-            font-weight: 600;
+        .listing-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
             font-size: 0.9rem;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1fr;
-            gap: 0.5rem;
         }
 
-        .data-row {
-            padding: 0.8rem;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 0.8rem;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1fr;
-            gap: 0.5rem;
-            animation: fadeInUp 0.5s ease-out;
+        .listing-row:last-child {
+            border-bottom: none;
         }
 
-        /* Competitor Dashboard */
-        .competitor-item {
+        .listing-header {
+            font-weight: 700;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .days-stale {
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            color: white;
+        }
+
+        .days-hot { background: #dc3545; }
+        .days-warm { background: #fd7e14; }
+        .days-monitor { background: #ffc107; color: #333; }
+
+        .lead-score {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
+            gap: 0.5rem;
             margin: 0.5rem 0;
-            background: var(--light-gray);
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
         }
 
-        .competitor-name {
-            font-weight: 600;
-            color: var(--blue);
-        }
-
-        .competitor-stats {
-            text-align: right;
-        }
-
-        .competitor-percentage {
+        .fire-emoji {
             font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent);
         }
 
-        .competitor-bar {
-            height: 4px;
-            background: #e0e7ff;
-            border-radius: 2px;
-            margin: 0.5rem 0;
-            overflow: hidden;
-        }
-
-        .competitor-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--blue), var(--accent));
-            animation: fillBar 2s ease-out;
-        }
-
-        .growing {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        /* Area Intelligence */
-        .area-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-            max-width: 800px;
-        }
-
-        .area-card {
-            background: var(--light-gray);
+        .letter-preview {
+            background: white;
+            color: #333;
             padding: 1.5rem;
             border-radius: 12px;
-            text-align: center;
-        }
-
-        .area-name {
-            font-weight: 700;
-            color: var(--blue);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .area-stats {
-            color: var(--dark-gray);
-            font-size: 0.9rem;
-        }
-
-        .area-price {
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Lead Alerts */
-        .alert-item {
-            background: var(--white);
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 0.8rem 0;
-            text-align: left;
+            margin: 1rem 0;
             max-width: 500px;
-            animation: slideIn 0.5s ease-out;
+            text-align: left;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #2B4DAF;
         }
 
-        .alert-emoji {
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
+        .letter-preview h3 {
+            color: #2B4DAF;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
-        .alert-text {
-            font-size: 0.95rem;
-            line-height: 1.4;
+        .letter-preview p {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
 
-        /* Weekly Report */
         .report-card {
-            background: var(--light-gray);
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 1.5rem;
             border-radius: 12px;
-            padding: 2rem;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
             max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .report-item {
             display: flex;
             justify-content: space-between;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid #d1d5db;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
         }
 
         .report-item:last-child {
             border-bottom: none;
         }
 
-        .report-value {
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .market-share {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--blue);
-            color: var(--white);
-            border-radius: 8px;
-        }
-
-        /* CTA */
-        .cta-text {
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-            font-weight: 600;
-            color: var(--blue);
-            margin-bottom: 2rem;
-        }
-
         .contact-info {
-            background: var(--blue);
-            color: var(--white);
-            padding: 2rem;
+            background: rgba(255, 69, 32, 0.1);
+            border: 2px solid #FF4520;
+            padding: 1.5rem;
             border-radius: 12px;
-            max-width: 400px;
+            margin: 1.5rem 0;
         }
 
-        .contact-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-title {
-            color: #e0e7ff;
+        .contact-info h3 {
+            color: #FF4520;
             margin-bottom: 1rem;
         }
 
-        .contact-detail {
-            margin: 0.5rem 0;
-        }
-
-        /* Navigation */
-        .nav-dots {
+        .progress-dots {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -352,286 +234,217 @@
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: rgba(43, 77, 175, 0.3);
+            background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
         }
 
         .dot.active {
-            background: var(--blue);
+            background: #FF4520;
         }
 
-        /* Animations */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+        .nav-hint {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            z-index: 100;
         }
 
-        @keyframes fillProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        @keyframes fillBar {
-            0% { width: 0%; }
-            100% { width: var(--bar-width, 100%); }
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .developer-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 500px;
         }
 
         @media (max-width: 768px) {
-            .slide {
-                padding: 15px;
-            }
-            
-            .data-header, .data-row {
-                font-size: 0.7rem;
-                grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-            }
-            
-            .area-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.8rem;
-            }
-            
-            .area-card {
-                padding: 1rem;
-            }
+            .slide h1 { font-size: 1.8rem; }
+            .slide h2 { font-size: 1.4rem; }
+            .slide p, .slide li { font-size: 1rem; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .developer-stats { grid-template-columns: 1fr; }
+            .listing-row { flex-direction: column; gap: 0.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .slide { padding: 15px; }
+            .slide h1 { font-size: 1.6rem; }
+            .slide h2 { font-size: 1.2rem; }
+            .slide p, .slide li { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
-    <div class="showcase">
+    <div class="showcase-container">
         <!-- Slide 1: Hook -->
         <div class="slide active">
-            <h1>What if you knew every property listing in Derry before your competitors did?</h1>
-            <p>Introducing the PropertyPal Lead Scraper — your competitive intelligence advantage.</p>
+            <h1>Every day, sellers in Derry are losing faith in their estate agent.</h1>
+            <p class="highlight" style="font-size: 1.3rem; margin-top: 2rem;">We find them before anyone else.</p>
+            <p style="margin-top: 2rem; font-size: 1rem; color: rgba(255, 255, 255, 0.8);">Tap to continue →</p>
         </div>
 
-        <!-- Slide 2: The Problem -->
+        <!-- Slide 2: The Insight -->
         <div class="slide">
-            <h2>The Problem</h2>
-            <ul class="problem-list">
-                <li>Manual checking of PropertyPal daily</li>
-                <li>No idea what competitors are listing</li>
-                <li>Missing opportunities when sellers switch agents</li>
-            </ul>
-            <div class="solution-text">
-                "You're reacting. We make you proactive."
+            <h2>The Insight</h2>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <span class="stat-number">47</span>
+                    <span>Average days to sell in Derry</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">83</span>
+                    <span>Properties listed 90+ days</span>
+                </div>
             </div>
+            <p><strong>Those sellers are frustrated. Their agent isn't delivering.</strong></p>
+            <p class="highlight" style="margin-top: 1.5rem;">What if YOU could reach them first?</p>
         </div>
 
-        <!-- Slide 3: The Scrape -->
+        <!-- Slide 3: How It Works — The Scan -->
         <div class="slide">
-            <h2>The Scrape — See it Working</h2>
-            <div class="scanning-container">
-                <div class="scanning-text">Scanning PropertyPal...</div>
-                <div class="scanning-text">Derry City... Waterside... Eglinton...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
+            <h2>How It Works — The Scan</h2>
+            <div class="scan-line"></div>
+            <p style="margin-bottom: 1.5rem;">Scanning PropertyPal for stale listings...</p>
+            <div class="listing-table">
+                <div class="listing-row listing-header">
+                    <span>Property</span>
+                    <span>Days Listed</span>
+                    <span>Agent</span>
                 </div>
-                <div class="counter">247 listings found</div>
-            </div>
-            <div class="data-table">
-                <div class="data-header">
-                    <div>Address</div>
-                    <div>Price</div>
-                    <div>Type</div>
-                    <div>Beds</div>
-                    <div>Agent</div>
-                    <div>Days</div>
+                <div class="listing-row">
+                    <span>4-bed detached, Culmore, £285k</span>
+                    <span class="days-stale days-hot">127 days</span>
+                    <span>Small Agent Ltd</span>
                 </div>
-                <div class="data-row">
-                    <div>Spencer Road</div>
-                    <div>£185k</div>
-                    <div>Semi</div>
-                    <div>3</div>
-                    <div>CityRealty</div>
-                    <div>14</div>
+                <div class="listing-row">
+                    <span>3-bed semi, Waterside, £175k</span>
+                    <span class="days-stale days-warm">94 days</span>
+                    <span>CityRealty</span>
                 </div>
-                <div class="data-row">
-                    <div>Culmore Road</div>
-                    <div>£245k</div>
-                    <div>Detached</div>
-                    <div>4</div>
-                    <div>Small Agent</div>
-                    <div>67</div>
+                <div class="listing-row">
+                    <span>2-bed terrace, Cityside, £125k</span>
+                    <span class="days-stale days-hot">108 days</span>
+                    <span>Local Estates</span>
                 </div>
-                <div class="data-row">
-                    <div>Waterside Park</div>
-                    <div>£155k</div>
-                    <div>Terrace</div>
-                    <div>2</div>
-                    <div>BTWShivers</div>
-                    <div>3</div>
+                <div class="listing-row">
+                    <span>3-bed semi, Eglinton, £210k</span>
+                    <span class="days-stale days-hot">156 days</span>
+                    <span>BTWShivers</span>
                 </div>
             </div>
+            <p class="highlight">Found 83 stale listings in Derry right now</p>
         </div>
 
-        <!-- Slide 4: Competitor Intel -->
+        <!-- Slide 4: The Lead Score -->
         <div class="slide">
-            <h2>Competitor Intelligence Dashboard</h2>
-            <div class="competitor-item">
-                <div class="competitor-name">CityRealty</div>
-                <div class="competitor-stats">
-                    <div class="competitor-percentage">45 (18%)</div>
-                    <div class="competitor-bar"><div class="competitor-fill" style="--bar-width: 18%;"></div></div>
-                </div>
+            <h2>The Lead Score</h2>
+            <p>We score every listing so you focus on the most likely to switch:</p>
+            
+            <div class="lead-score">
+                <span class="fire-emoji">🔥🔥🔥</span>
+                <span><strong>HOT</strong> - 120+ days, small agent, price reduced twice</span>
             </div>
-            <div class="competitor-item">
-                <div class="competitor-name">Donnybrook Estate</div>
-                <div class="competitor-stats">
-                    <div class="competitor-percentage">38 (15%)</div>
-                    <div class="competitor-bar"><div class="competitor-fill" style="--bar-width: 15%;"></div></div>
-                </div>
+            
+            <div class="lead-score">
+                <span class="fire-emoji">🔥🔥</span>
+                <span><strong>WARM</strong> - 90-120 days, price reduced once</span>
             </div>
-            <div class="competitor-item">
-                <div class="competitor-name">PropertyPal Homes</div>
-                <div class="competitor-stats">
-                    <div class="competitor-percentage">29 (12%)</div>
-                    <div class="competitor-bar"><div class="competitor-fill" style="--bar-width: 12%;"></div></div>
-                </div>
+            
+            <div class="lead-score">
+                <span class="fire-emoji">🔥</span>
+                <span><strong>MONITOR</strong> - 60-90 days, no price change yet</span>
             </div>
-            <div class="competitor-item">
-                <div class="competitor-name">BTWShivers</div>
-                <div class="competitor-stats">
-                    <div class="competitor-percentage">24 (10%)</div>
-                    <div class="competitor-bar"><div class="competitor-fill" style="--bar-width: 10%;"></div></div>
-                </div>
-            </div>
-            <div class="competitor-item">
-                <div class="competitor-name">James Gorman Property</div>
-                <div class="competitor-stats">
-                    <div class="competitor-percentage growing">12 (5%) — GROWING ↑</div>
-                    <div class="competitor-bar"><div class="competitor-fill" style="--bar-width: 5%;"></div></div>
-                </div>
-            </div>
-            <p><strong>5 agents with only 1-2 listings — their sellers are your opportunity</strong></p>
+            
+            <p style="margin-top: 2rem;">Focus your time where it counts most.</p>
         </div>
 
-        <!-- Slide 5: Area Intelligence -->
+        <!-- Slide 5: The Approach -->
         <div class="slide">
-            <h2>Area Intelligence</h2>
-            <div class="area-grid">
-                <div class="area-card">
-                    <div class="area-name">Waterside</div>
-                    <div class="area-stats">67 listings</div>
-                    <div class="area-price">avg £185k</div>
-                </div>
-                <div class="area-card">
-                    <div class="area-name">Cityside</div>
-                    <div class="area-stats">54 listings</div>
-                    <div class="area-price">avg £145k</div>
-                </div>
-                <div class="area-card">
-                    <div class="area-name">Culmore</div>
-                    <div class="area-stats">23 listings</div>
-                    <div class="area-price">avg £245k</div>
-                </div>
-                <div class="area-card">
-                    <div class="area-name">Eglinton</div>
-                    <div class="area-stats">31 listings</div>
-                    <div class="area-price">avg £225k</div>
-                </div>
-                <div class="area-card">
-                    <div class="area-name">Drumahoe</div>
-                    <div class="area-stats">18 listings</div>
-                    <div class="area-price">avg £210k</div>
-                </div>
-                <div class="area-card">
-                    <div class="area-name">Strathfoyle</div>
-                    <div class="area-stats">15 listings</div>
-                    <div class="area-price">avg £155k</div>
-                </div>
+            <h2>The Approach — What James Does</h2>
+            <div class="letter-preview">
+                <h3>Personal Letter Example</h3>
+                <p><strong>Dear Homeowner at 14 Beechwood Park...</strong></p>
+                <p>Your property has been on the market for over 3 months. I'd love to offer a fresh perspective and a free no-obligation market appraisal.</p>
+                <p><strong>James Gorman, Local Estate Agent</strong><br>028 7161 0402</p>
             </div>
-            <p><strong>"Know your market. Price smarter."</strong></p>
+            <p>Personalised outreach to each seller. Professional, not pushy.</p>
+            <p class="highlight">We provide the leads. You close the deals.</p>
         </div>
 
-        <!-- Slide 6: Lead Alerts -->
+        <!-- Slide 6: Developer Intel -->
         <div class="slide">
-            <h2>Lead Alerts — The Money Slide</h2>
-            <div class="alert-item">
-                <div class="alert-text">
-                    <span class="alert-emoji">🔔</span><strong>NEW:</strong> 3-bed semi, Waterside, £175k — listed by Small Agent Ltd
+            <h2>Bonus — Developer Intel</h2>
+            <p>It's not just sellers. We track the market for developers too.</p>
+            
+            <div class="developer-stats">
+                <div class="stat-box">
+                    <span class="stat-number">12</span>
+                    <span>New planning applications this month</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">3</span>
+                    <span>Gap sites identified</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">+15%</span>
+                    <span>Waterside YoY growth</span>
                 </div>
             </div>
-            <div class="alert-item">
-                <div class="alert-text">
-                    <span class="alert-emoji">🔔</span><strong>PRICE DROP:</strong> 4-bed detached, Culmore, now £235k (was £260k) — 90 days on market
-                </div>
-            </div>
-            <div class="alert-item">
-                <div class="alert-text">
-                    <span class="alert-emoji">🔔</span><strong>BACK ON MARKET:</strong> 2-bed terrace, Cityside — previously sale agreed with CityRealty
-                </div>
-            </div>
-            <p><strong>These are YOUR leads. Properties listed with weak agents or back on market = sellers ready to switch.</strong></p>
+            
+            <p style="margin-top: 1.5rem;">Connect James Gorman with Derry's biggest builders.</p>
         </div>
 
-        <!-- Slide 7: Weekly Report -->
+        <!-- Slide 7: Weekly Report Card -->
         <div class="slide">
-            <h2>Weekly Market Report</h2>
+            <h2>Weekly Report Card</h2>
             <div class="report-card">
+                <h3 style="color: #2B4DAF; margin-bottom: 1rem;">This Week's Intelligence</h3>
                 <div class="report-item">
-                    <span>New listings this week:</span>
-                    <span class="report-value">23</span>
+                    <span>New stale listings</span>
+                    <span class="highlight">8</span>
                 </div>
                 <div class="report-item">
-                    <span>Price reductions:</span>
-                    <span class="report-value">8</span>
+                    <span>🔥🔥🔥 Hot leads</span>
+                    <span class="highlight">3</span>
                 </div>
                 <div class="report-item">
-                    <span>Sale agreed:</span>
-                    <span class="report-value">15</span>
+                    <span>Price reductions spotted</span>
+                    <span class="highlight">5</span>
                 </div>
                 <div class="report-item">
-                    <span>Back on market:</span>
-                    <span class="report-value">3</span>
+                    <span>Back on market</span>
+                    <span class="highlight">2</span>
                 </div>
-                <div class="market-share">
-                    Your market share: <strong>5% → target 10%</strong>
+                <div class="report-item">
+                    <span>New planning applications</span>
+                    <span class="highlight">1</span>
                 </div>
             </div>
-            <p><strong>"Delivered to your inbox every Monday"</strong></p>
+            <p class="highlight">Delivered to your inbox every Monday at 8am</p>
         </div>
 
         <!-- Slide 8: CTA -->
         <div class="slide">
-            <div class="cta-text">This runs automatically. Every week. While you focus on selling.</div>
+            <h1>While other agents wait for the phone to ring...</h1>
+            <p class="highlight" style="font-size: 1.4rem; margin: 2rem 0;">You'll be the one making the call.</p>
+            
             <div class="contact-info">
-                <div class="contact-name">Phil Patterson</div>
-                <div class="contact-title">Blue Canvas AI</div>
-                <div class="contact-detail">📞 +447935217762</div>
-                <div class="contact-detail">✉️ contact@bluecanvas.ai</div>
+                <h3>Ready to get started?</h3>
+                <p><strong>Phil Patterson</strong><br>Blue Canvas AI</p>
+                <p>📞 +44 7935 217762<br>✉️ contact@bluecanvas.ai</p>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Dots -->
-    <div class="nav-dots">
+    <div class="progress-dots">
         <div class="dot active" onclick="goToSlide(0)"></div>
         <div class="dot" onclick="goToSlide(1)"></div>
         <div class="dot" onclick="goToSlide(2)"></div>
@@ -642,104 +455,94 @@
         <div class="dot" onclick="goToSlide(7)"></div>
     </div>
 
+    <div class="nav-hint">Tap anywhere or swipe to navigate</div>
+
     <script>
         let currentSlide = 0;
-        const totalSlides = 8;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
         
-        function showSlide(index) {
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
             
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
+            currentSlide = (n + slides.length) % slides.length;
             
-            slides[index].classList.add('active');
-            dots[index].classList.add('active');
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
         }
         
-        function goToSlide(index) {
-            currentSlide = index;
-            showSlide(currentSlide);
+        function goToSlide(n) {
+            showSlide(n);
         }
         
         function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            showSlide(currentSlide);
+            showSlide(currentSlide + 1);
         }
         
         function prevSlide() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            showSlide(currentSlide);
+            showSlide(currentSlide - 1);
         }
         
-        // Touch/swipe navigation
+        // Touch/click navigation
         let startX = 0;
-        let startY = 0;
+        let endX = 0;
         
-        document.addEventListener('touchstart', (e) => {
+        document.addEventListener('touchstart', function(e) {
             startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
         });
         
-        document.addEventListener('touchend', (e) => {
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const diffX = startX - endX;
-            const diffY = startY - endY;
+        document.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+        
+        document.addEventListener('click', function(e) {
+            // Don't navigate on dot clicks
+            if (e.target.classList.contains('dot')) return;
             
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    nextSlide();
-                } else {
-                    prevSlide();
-                }
+            const rect = document.body.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const screenWidth = rect.width;
+            
+            if (clickX < screenWidth * 0.3) {
+                prevSlide();
+            } else if (clickX > screenWidth * 0.7) {
+                nextSlide();
+            } else {
+                nextSlide(); // Default to next on center tap
             }
         });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left = next slide
+                } else {
+                    prevSlide(); // Swipe right = prev slide
+                }
+            }
+        }
         
         // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 nextSlide();
+                e.preventDefault();
             } else if (e.key === 'ArrowLeft') {
                 prevSlide();
+                e.preventDefault();
             }
         });
-        
-        // Click navigation
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.nav-dots') && !e.target.closest('.contact-info')) {
-                nextSlide();
-            }
-        });
-        
-        // Auto-start animations on slide 3
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new MutationObserver(() => {
-                const slide3 = document.querySelectorAll('.slide')[2];
-                if (slide3.classList.contains('active')) {
-                    // Restart animations
-                    const progressFill = slide3.querySelector('.progress-fill');
-                    const dataRows = slide3.querySelectorAll('.data-row');
-                    
-                    if (progressFill) {
-                        progressFill.style.animation = 'none';
-                        progressFill.offsetHeight; // Trigger reflow
-                        progressFill.style.animation = 'fillProgress 4s ease-out';
-                    }
-                    
-                    dataRows.forEach((row, index) => {
-                        row.style.animation = 'none';
-                        row.offsetHeight; // Trigger reflow
-                        row.style.animation = `fadeInUp 0.5s ease-out ${index * 0.2}s both`;
-                    });
-                }
-            });
-            
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => {
-                observer.observe(slide, { attributes: true, attributeFilter: ['class'] });
-            });
-        });
+
+        // Auto-advance on first load
+        setTimeout(() => {
+            const hint = document.querySelector('.nav-hint');
+            if (hint) hint.style.opacity = '0.5';
+        }, 3000);
     </script>
 </body>
 </html>
